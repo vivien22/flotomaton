@@ -35,7 +35,7 @@ def main():
     # event on pin 23 and deal with it by calling 
     # the buttonEventHandler function
     GPIO.add_event_detect(23,GPIO.FALLING)
-    GPIO.add_event_callback(23,buttonEventHandler,100)
+    GPIO.add_event_callback(23,buttonEventHandler)
 
     # turn off both LEDs
     GPIO.output(25,False)
