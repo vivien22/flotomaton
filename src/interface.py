@@ -20,14 +20,19 @@ class init(object):
         self.text_1 = font.render("1", True, font_colour)
 
         # Load, resize & display background
-        self.fond = pygame.image.load("fond.png").convert()
+        self.fond = pygame.image.load("../images/fond.png").convert()
         self.fond = pygame.transform.scale(self.fond, (self.width, self.height))
 
         self.screen.blit(self.fond, (0,0))
         self.pygame.display.flip()
 
     def countdown_start(self):
-        print("countdown")
+        
+        self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
+        self.screen.blit(self.text_3, ((self.width - self.text_3.get_width()) // 2, (self.height - self.text_3.get_height()) // 2))
+        self.pygame.display.flip()
+        self.pygame.time.wait(1000)
+
         self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
         self.screen.blit(self.text_2, ((self.width - self.text_2.get_width()) // 2, (self.height - self.text_2.get_height()) // 2))
         self.pygame.display.flip()
