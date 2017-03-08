@@ -1,4 +1,4 @@
-import io, time, os, sys, pygame
+import io, time, os, sys, pygame, interface
 
 try:
     import picamera
@@ -13,28 +13,12 @@ warnings.filterwarnings('default', category=DeprecationWarning)
 pics_taken = 0
 vid_taken = 0
  
-# Init pygame and screen / initialise pygame et ecran
+# Init pygame
 pygame.init()
-res = pygame.display.list_modes()   # return the resolution of your monitor 
-width, height = res[0]
-print("Screen resolution :", width, "x", height)
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
-pygame.mouse.set_visible(False)
 
-#Font 3,2,1 for countdown
-font = pygame.font.SysFont("arial", 256)
-font_colour = (127, 127, 127)
-text_3 = font.render("3", True, font_colour)
-text_2 = font.render("2", True, font_colour)
-text_1 = font.render("1", True, font_colour)
+# Create interface
+ihm = interface.init(pygame)
 
-# Load, resize & display background
-fond = pygame.image.load("fond.png").convert()
-fond = pygame.transform.scale(fond, (width, height))
-
-screen.blit(fond, (0,0))
-pygame.display.flip()
- 
 # Picamera object / objet Picamera
 if pi_camera_pres:
     camera = picamera.PiCamera()
@@ -43,18 +27,7 @@ if pi_camera_pres:
 # Define functions / fonctions
 def take_pic():
     
-    screen.fill(pygame.Color("black")) # erases the entire screen surface
-    screen.blit(text_2, ((width - text_2.get_width()) // 2, (height - text_2.get_height()) // 2))
-    pygame.display.flip()
-    pygame.time.wait(1000)
-
-    screen.fill(pygame.Color("black")) # erases the entire screen surface
-    screen.blit(text_1, ((width - text_1.get_width()) // 2, (height - text_1.get_height()) // 2))
-    pygame.display.flip()
-    pygame.time.wait(1000)
-
-    screen.fill(pygame.Color("black")) # erases the entire screen surface
-    pygame.display.flip()
+    ihm.countdown_start()
     
     global pics_taken
     pics_taken += 1
@@ -62,8 +35,7 @@ def take_pic():
     if pi_camera_pres:
         camera.capture('image_' + str(pics_taken) + '.jpg')
 
-    screen.blit(fond, (0,0))
-    pygame.display.flip()
+    ihm.countdown_end()
  
 def take_video() :
     global vid_taken
@@ -71,7 +43,7 @@ def take_video() :
     
     if pi_camera_pres:
         camera.start_recording('video_' + str(vid_taken) + '.h264')
-        #Recording duration / duree enregistrement (15s)
+        # Recording duration / duree enregistrement (15s)
         camera.wait_recording(15)
         camera.stop_recording()
  
@@ -89,10 +61,12 @@ if pi_camera_pres:
     camera.preview.alpha = 128
 
 while(True):
-  pygame.display.update()
-  for event in pygame.event.get():
-      if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_ESCAPE:
-          quit_app()
-        elif event.key == pygame.K_SPACE:
-          take_pic()
+    
+    ihm.refresh()
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                quit_app()
+            elif event.key == pygame.K_SPACE:
+                take_pic()

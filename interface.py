@@ -1,54 +1,56 @@
 import pygame
 
-pygame.init()
+class init(object):
+  
+    def __init__(self, pygame):
+        self.pygame = pygame
+  
+        # Start fullscreen, mask mouse
+        res = pygame.display.list_modes()   # return the resolution of your monitor 
+        self.width, self.height = res[0]
+        print("Screen resolution :", self.width, "x", self.height)
+        self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+        pygame.mouse.set_visible(False)
 
-# Get resolution
-infoObject    = pygame.display.Info()
-WINDOW_WIDTH  = infoObject.current_w
-WINDOW_HEIGHT = infoObject.current_h
+        #Font 3,2,1 for countdown
+        font = pygame.font.SysFont("arial", 256)
+        font_colour = (127, 127, 127)
+        self.text_3 = font.render("3", True, font_colour)
+        self.text_2 = font.render("2", True, font_colour)
+        self.text_1 = font.render("1", True, font_colour)
 
-# Open pygame window
-window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
+        # Load, resize & display background
+        self.fond = pygame.image.load("fond.png").convert()
+        self.fond = pygame.transform.scale(self.fond, (self.width, self.height))
 
-# Load, resize & display background
-fond = pygame.image.load("fond.png").convert()
-fond = pygame.transform.scale(fond, (WINDOW_WIDTH, WINDOW_HEIGHT))
-window.blit(fond, (0,0))
-pygame.display.flip()
+        self.screen.blit(self.fond, (0,0))
+        self.pygame.display.flip()
 
-# White background
-white = [255, 255, 255]
-#Font 3,2,1
-font = pygame.font.SysFont("arial", 72)
-text_3 = font.render("3", True, (0, 0, 0))
-text_2 = font.render("2", True, (0, 0, 0))
-text_1 = font.render("1", True, (0, 0, 0))
+    def countdown_start(self):
+        print("countdown")
+        self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
+        self.screen.blit(self.text_2, ((self.width - self.text_2.get_width()) // 2, (self.height - self.text_2.get_height()) // 2))
+        self.pygame.display.flip()
+        self.pygame.time.wait(1000)
 
-#Refresh display
-pygame.display.flip()
+        self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
+        self.screen.blit(self.text_1, ((self.width - self.text_1.get_width()) // 2, (self.height - self.text_1.get_height()) // 2))
+        self.pygame.display.flip()
+        self.pygame.time.wait(1000)
 
-while 1:
+        self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
+        self.pygame.display.flip()
 
-    window.blit(fond, (0,0))
-    pygame.display.flip()
-    pygame.time.wait(1000)
+    def countdown_end(self):
+        self.screen.blit(self.fond, (0,0))
+        self.pygame.display.flip()
 
-    window.fill(white)
-    window.blit(text_3, ((WINDOW_WIDTH - text_3.get_width()) // 2, (WINDOW_HEIGHT - text_3.get_height()) // 2))
-    pygame.display.flip()
-    pygame.time.wait(1000)
+    def refresh(self):
+        self.pygame.display.update()
 
-    window.fill(white)
-    window.blit(text_2, ((WINDOW_WIDTH - text_2.get_width()) // 2, (WINDOW_HEIGHT - text_2.get_height()) // 2))
-    pygame.display.flip()
-    pygame.time.wait(1000)
-
-    window.fill(white)
-    window.blit(text_1, ((WINDOW_WIDTH - text_1.get_width()) // 2, (WINDOW_HEIGHT - text_1.get_height()) // 2))
-    pygame.display.flip()
-    pygame.time.wait(1000)
-
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            pygame.quit()
-            raise SystemExit
+def main():
+    pygame.init()
+    init(pygame)
+  
+if __name__ == "__main__":
+    main()
