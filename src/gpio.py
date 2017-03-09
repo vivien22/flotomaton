@@ -46,4 +46,5 @@ class init(object):
         GPIO.cleanup()
 
 if __name__=="__main__":
-    main()
+    gp = init()
+    gp.close()
