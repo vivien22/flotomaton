@@ -33,15 +33,18 @@ class gphoto(object):
 
     def capture_single_image(self, dst_file_path):
         print('Capturing image')
-        file_path = camera_capture()
+        file_path = self.camera_capture()
         print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
-        target = os.path.join('/tmp', file_path.name)
+        target = os.path.join(dst_file_path, file_path.name)
         print('Copying image to', target)
-        return camera_file_get(file_path, target)
+        self.camera_file_get_and_save(file_path, target)
+
+        return file_path.name
 
 
 if __name__=="__main__":
     gplib = gphoto()
-    gplib.capture_single_image('/tmp')
+    test = gplib.capture_single_image('.')
+    print(test)
     gplib.close()
 

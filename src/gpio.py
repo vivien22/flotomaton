@@ -47,4 +47,6 @@ class init(object):
 
 if __name__=="__main__":
     gp = init()
+    while True:
+	test = 1
     gp.close()

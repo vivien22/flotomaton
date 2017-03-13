@@ -1,6 +1,7 @@
-import io, time, os, sys, pygame, interface
+import io, time, os, sys, pygame, interface, gphoto
 
 try:
+    pi_camera_pres = True
     import picamera
 except:
     print("WARN : no pi camera module detected !")
@@ -18,6 +19,7 @@ pygame.init()
 
 # Create interface
 ihm = interface.init(pygame)
+gp  = gphoto.gphoto();
 
 # Picamera object / objet Picamera
 if pi_camera_pres:
@@ -32,8 +34,10 @@ def take_pic():
     global pics_taken
     pics_taken += 1
     
-    if pi_camera_pres:
-        camera.capture('image_' + str(pics_taken) + '.jpg')
+    #if pi_camera_pres:
+    #    camera.capture('image_' + str(pics_taken) + '.jpg')
+
+    pic_name = gp.capture_single_image('.')
 
     ihm.countdown_end()
  

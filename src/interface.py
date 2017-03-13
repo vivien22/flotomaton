@@ -20,7 +20,7 @@ class init(object):
         self.text_1 = font.render("1", True, font_colour)
 
         # Load, resize & display background
-        self.fond = pygame.image.load("../images/fond.png").convert()
+        self.fond = pygame.image.load("images/fond.png").convert()
         self.fond = pygame.transform.scale(self.fond, (self.width, self.height))
 
         self.screen.blit(self.fond, (0,0))
@@ -51,7 +51,7 @@ class init(object):
         self.pygame.display.flip()
 
     def refresh(self):
-        self.pygame.display.update()
+        self.pygame.display.update()    
 
 def main():
     pygame.init()
