@@ -1,6 +1,10 @@
 import logging
 import os
-import gphoto2 as gp
+
+try:
+    import gphoto2 as gp
+except:
+    print("WARN : gphoto module detected !")
 
 class gphoto(object):
   

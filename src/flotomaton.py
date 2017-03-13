@@ -1,4 +1,4 @@
-import io, time, os, sys, pygame, interface, gphoto
+import io, time, os, sys, pygame, interface
 
 try:
     pi_camera_pres = True
@@ -7,19 +7,30 @@ except:
     print("WARN : no pi camera module detected !")
     pi_camera_pres = False
 
+#try:
+#    gphoto_pres = True
+#    import gphoto
+#except:
+#    print("WARN : gphoto module detected !")
+#    gphoto_pres = False
+gphoto_pres = False
+
 # Display warning for deprecated Picamera functions (since v1.8)
 import warnings
 warnings.filterwarnings('default', category=DeprecationWarning)
  
 pics_taken = 0
-vid_taken = 0
+vid_taken  = 0
  
 # Init pygame
 pygame.init()
 
 # Create interface
-ihm = interface.init(pygame)
-gp  = gphoto.gphoto();
+ihm = interface.init(pygame, "../images/fond.png")
+
+# Intialize gphoto library
+if gphoto_pres:
+    gp  = gphoto.gphoto();
 
 # Picamera object / objet Picamera
 if pi_camera_pres:
@@ -33,13 +44,30 @@ def take_pic():
     
     global pics_taken
     pics_taken += 1
+
+    # default image displayed if not taken
+    image_name = '../images/photo_test.png'
     
-    #if pi_camera_pres:
-    #    camera.capture('image_' + str(pics_taken) + '.jpg')
+    if pi_camera_pres:
+        image_name = '../image_' + str(pics_taken) + '.jpg'
+        camera.capture(image_name)
 
-    pic_name = gp.capture_single_image('.')
+    # Take picture with gphoto
+    if gphoto_pres:
+        image_name = gp.capture_single_image('/home/pi/flotomaton')
 
-    ihm.countdown_end()
+    if pi_camera_pres:
+        camera.stop_preview()
+
+    ihm.display_image(image_name)    
+
+    pygame.time.wait(2000)
+
+    ihm.reset_background()
+
+    if pi_camera_pres:
+        camera.start_preview()
+
  
 def take_video() :
     global vid_taken

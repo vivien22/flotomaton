@@ -2,7 +2,7 @@ import pygame
 
 class init(object):
   
-    def __init__(self, pygame):
+    def __init__(self, pygame, background_image_path):
         self.pygame = pygame
   
         # Start fullscreen, mask mouse
@@ -20,11 +20,7 @@ class init(object):
         self.text_1 = font.render("1", True, font_colour)
 
         # Load, resize & display background
-        self.fond = pygame.image.load("images/fond.png").convert()
-        self.fond = pygame.transform.scale(self.fond, (self.width, self.height))
-
-        self.screen.blit(self.fond, (0,0))
-        self.pygame.display.flip()
+        self.background = self.display_image(background_image_path)
 
     def countdown_start(self):
         
@@ -46,12 +42,27 @@ class init(object):
         self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
         self.pygame.display.flip()
 
-    def countdown_end(self):
-        self.screen.blit(self.fond, (0,0))
+    def reset_background(self):
+        # erases the entire screen surface
+        self.screen.fill(self.pygame.Color("black"))
+        # then diplay background
+        self.screen.blit(self.background, (0,0))
         self.pygame.display.flip()
 
     def refresh(self):
         self.pygame.display.update()    
+
+    def display_image(self, image_path):
+        # erases the entire screen surface
+        self.screen.fill(self.pygame.Color("black"))
+        # Load, resize & display image
+        image = pygame.image.load(image_path).convert()
+        image = pygame.transform.scale(image, (self.width, self.height))
+
+        self.screen.blit(image, (0,0))
+        self.pygame.display.flip()
+
+        return image
 
 def main():
     pygame.init()

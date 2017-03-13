@@ -1,2 +1,3 @@
 #!/bin/bash
-python src/flotomaton.py 
+cd src
+python flotomaton.py 
