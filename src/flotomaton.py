@@ -38,10 +38,8 @@ if pi_camera_pres:
     camera.framerate = float(24)
  
 # Define functions / fonctions
-def take_pic():
-    
-    ihm.countdown_start()
-    
+def take_and_diplay_pic():
+
     global pics_taken
     pics_taken += 1
 
@@ -55,6 +53,8 @@ def take_pic():
     # Take picture with gphoto
     if gphoto_pres:
         image_name = gp.capture_single_image('/home/pi/flotomaton')
+        # TODO : renaming
+        # os.rename('/home/pi/flotomaton' + image_name, '/home/pi/flotomaton' + image_name + '_' + str(pics_taken))
 
     if pi_camera_pres:
         camera.stop_preview()
@@ -63,23 +63,42 @@ def take_pic():
 
     pygame.time.wait(2000)
 
-    ihm.reset_background()
-
     if pi_camera_pres:
         camera.start_preview()
 
+
+def take_pic(image_to_take):
+    ihm.countdown_start()
+
+    # Take picture with gphoto
+    for i in range(0, image_to_take):
+        # Call take_pic method to take, display picture and reset ihm
+        take_and_diplay_pic()
+
+    ihm.reset_background()
+
  
 def take_video() :
+
+    ihm.countdown_start()
+
     global vid_taken
     vid_taken += 1
     
     if pi_camera_pres:
-        camera.start_recording('video_' + str(vid_taken) + '.h264')
+        camera.start_recording('../video_' + str(vid_taken) + '.h264')
         # Recording duration / duree enregistrement (15s)
-        camera.wait_recording(15)
+        camera.wait_recording(5)
         camera.stop_recording()
+
+    if gphoto_pres:
+        # 5 seconds video capture
+        video_name = gp.capture_video('/home/pi/flotomaton', 5)
  
+    ihm.reset_background()
+
 def quit_app():
+    # gp.close()
     if pi_camera_pres:
         camera.close()
     pygame.quit()
@@ -101,4 +120,9 @@ while(True):
             if event.key == pygame.K_ESCAPE:
                 quit_app()
             elif event.key == pygame.K_SPACE:
-                take_pic()
+                take_pic(1)
+            elif event.key == pygame.K_RETURN:
+                take_pic(4)
+            elif event.key == pygame.K_v:
+                take_video()
+

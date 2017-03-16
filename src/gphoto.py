@@ -19,11 +19,20 @@ class gphoto(object):
     def close(self):
         gp.gp_camera_exit(self.camera, self.context)
 
-    def camera_capture(self):
+    def capture_image(self):
         return gp.check_result(gp.gp_camera_capture(self.camera, 
                                                     gp.GP_CAPTURE_IMAGE, 
                                                     self.context))
 
+    def capture_video(self, video_duration):
+        file_path = gp.check_result(gp.gp_camera_capture(self.camera, 
+                                                         gp.GP_CAPTURE_MOVIE, 
+                                                         self.context))
+
+        # TODO : see how it goes : video_duration
+
+         return file_path
+         
     def camera_file_get_and_save(self, file_path, target):
         camera_file = gp.check_result(gp.gp_camera_file_get(self.camera, 
                                                             file_path.folder, 
@@ -37,13 +46,37 @@ class gphoto(object):
 
     def capture_single_image(self, dst_file_path):
         print('Capturing image')
-        file_path = self.camera_capture()
+        file_path = self.capture_image()
         print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
         target = os.path.join(dst_file_path, file_path.name)
         print('Copying image to', target)
         self.camera_file_get_and_save(file_path, target)
 
         return file_path.name
+
+    def capture_multiple_images(self, dst_file_path, image_to_take):
+
+        for i in range(1, image_to_take):
+            print('Capturing image')
+            file_path     = self.capture_image()
+            image_list[i] = file_path.name
+            print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+            target = os.path.join(dst_file_path, file_path.name)
+            print('Copying image to', target)
+            self.camera_file_get_and_save(file_path, target)
+
+        return image_list
+
+    def capture_video(self, dst_file_path, video_duration):
+        print('Capturing video')
+        file_path = self.capture_video(video_duration)
+        print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+        target = os.path.join(dst_file_path, file_path.name)
+        print('Copying image to', target)
+        self.camera_file_get_and_save(file_path, target)
+
+        return file_path.name
+
 
 
 if __name__=="__main__":
