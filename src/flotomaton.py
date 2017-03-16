@@ -1,4 +1,4 @@
-import io, time, os, sys, pygame, interface
+import io, time, os, sys, pygame, interface, photo_editor
 
 try:
     pi_camera_pres = True
@@ -66,17 +66,32 @@ def take_and_diplay_pic():
     if pi_camera_pres:
         camera.start_preview()
 
+    return image_name
+
 
 def take_pic(image_to_take):
+    image_name_tab = []
+
     ihm.countdown_start()
 
     # Take picture with gphoto
     for i in range(0, image_to_take):
         # Call take_pic method to take, display picture and reset ihm
-        take_and_diplay_pic()
+        image_name_tab.append(take_and_diplay_pic())
 
     ihm.reset_background()
 
+    return image_name_tab
+
+def take_photo_montage():
+
+    image_name_tab = take_pic(4)
+    
+    photo_editor.montage(image_name_tab[0],
+                         image_name_tab[1],
+                         image_name_tab[2],
+                         image_name_tab[3],
+                         "../montage.jpg")
  
 def take_video() :
 
@@ -122,7 +137,7 @@ while(True):
             elif event.key == pygame.K_SPACE:
                 take_pic(1)
             elif event.key == pygame.K_RETURN:
-                take_pic(4)
+                take_photo_montage()
             elif event.key == pygame.K_v:
                 take_video()
 

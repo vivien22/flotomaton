@@ -10,4 +10,5 @@ http://helloraspberrypi.blogspot.fr/2015/09/compile-and-gphoto2-258-and-libgphot
 
 - imagemagik & wand :
 http://docs.wand-py.org/en/0.4.4/
+https://wiki.python.org/moin/ImageMagick
 
