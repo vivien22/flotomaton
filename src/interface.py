@@ -20,7 +20,7 @@ class init(object):
         self.text_1 = font.render("1", True, font_colour)
 
         # Load, resize & display background
-        self.background = self.display_image(background_image_path)
+        self.background = self.display_image(background_image_path, 0)
 
     def countdown_start(self):
         
@@ -52,7 +52,7 @@ class init(object):
     def refresh(self):
         self.pygame.display.update()    
 
-    def display_image(self, image_path):
+    def display_image(self, image_path, display_time_ms):
         # erases the entire screen surface
         self.screen.fill(self.pygame.Color("black"))
         # Load, resize & display image
@@ -61,6 +61,7 @@ class init(object):
 
         self.screen.blit(image, (0,0))
         self.pygame.display.flip()
+        self.pygame.time.wait(display_time_ms)
 
         return image
 

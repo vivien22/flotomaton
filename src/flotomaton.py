@@ -59,9 +59,7 @@ def take_and_diplay_pic():
     if pi_camera_pres:
         camera.stop_preview()
 
-    ihm.display_image(image_name)    
-
-    pygame.time.wait(2000)
+    ihm.display_image(image_name, 2000)    
 
     if pi_camera_pres:
         camera.start_preview()
@@ -72,18 +70,21 @@ def take_and_diplay_pic():
 def take_pic(image_to_take):
     image_name_tab = []
 
-    ihm.countdown_start()
-
     # Take picture with gphoto
     for i in range(0, image_to_take):
         # Call take_pic method to take, display picture and reset ihm
         image_name_tab.append(take_and_diplay_pic())
 
-    ihm.reset_background()
-
     return image_name_tab
 
+def take_single_picture():
+    ihm.countdown_start()
+    take_pic(1)
+    ihm.reset_background()
+
 def take_photo_montage():
+
+    ihm.countdown_start()
 
     image_name_tab = take_pic(4)
     
@@ -92,6 +93,9 @@ def take_photo_montage():
                          image_name_tab[2],
                          image_name_tab[3],
                          "../montage.jpg")
+
+    ihm.display_image("../montage.jpg", 2000)
+    ihm.reset_background()
  
 def take_video() :
 
@@ -135,9 +139,8 @@ while(True):
             if event.key == pygame.K_ESCAPE:
                 quit_app()
             elif event.key == pygame.K_SPACE:
-                take_pic(1)
+                take_single_picture()
             elif event.key == pygame.K_RETURN:
                 take_photo_montage()
             elif event.key == pygame.K_v:
                 take_video()
-
