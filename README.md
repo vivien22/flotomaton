@@ -8,9 +8,8 @@ http://helloraspberrypi.blogspot.fr/2015/10/install-and-test-python-gphoto2-pyth
 - Install gphoto2 & libgphoto2 :
 http://helloraspberrypi.blogspot.fr/2015/09/compile-and-gphoto2-258-and-libgphoto2.html
 
-- imagemagik & wand :
-http://docs.wand-py.org/en/0.4.4/
-https://wiki.python.org/moin/ImageMagick
+- imagemagik :
+https://doc.ubuntu-fr.org/imagemagick
 
 - wifi :
 https://doc.ubuntu-fr.org/hostapd
