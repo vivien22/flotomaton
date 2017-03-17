@@ -12,3 +12,6 @@ http://helloraspberrypi.blogspot.fr/2015/09/compile-and-gphoto2-258-and-libgphot
 http://docs.wand-py.org/en/0.4.4/
 https://wiki.python.org/moin/ImageMagick
 
+- wifi :
+https://doc.ubuntu-fr.org/hostapd
+https://doc.ubuntu-fr.org/configuration_serveur_dns_dhcp

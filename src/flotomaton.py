@@ -97,7 +97,7 @@ def take_photo_montage():
     ihm.display_image("../montage.jpg", 2000)
     ihm.reset_background()
  
-def take_video() :
+def take_video():
 
     ihm.countdown_start()
 
