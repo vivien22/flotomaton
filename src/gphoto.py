@@ -4,7 +4,7 @@ import os
 try:
     import gphoto2 as gp
 except:
-    print("WARN : gphoto module detected !")
+    print("WARN : no gphoto module detected !")
 
 class gphoto(object):
   
@@ -14,7 +14,12 @@ class gphoto(object):
         gp.check_result(gp.use_python_logging())
         self.context = gp.gp_context_new()
         self.camera  = gp.check_result(gp.gp_camera_new())
-        gp.check_result(gp.gp_camera_init(self.camera, self.context))
+
+        try:
+            gp.check_result(gp.gp_camera_init(self.camera, self.context))
+        except:
+            print("WARN : fail to init camera !")
+            self.isCameraPresent = False
 
     def close(self):
         gp.gp_camera_exit(self.camera, self.context)
@@ -24,14 +29,14 @@ class gphoto(object):
                                                     gp.GP_CAPTURE_IMAGE, 
                                                     self.context))
 
-    def capture_video(self, video_duration):
+    def camera_capture_video(self, video_duration):
         file_path = gp.check_result(gp.gp_camera_capture(self.camera, 
                                                          gp.GP_CAPTURE_MOVIE, 
                                                          self.context))
 
         # TODO : see how it goes : video_duration
 
-         return file_path
+        return file_path
          
     def camera_file_get_and_save(self, file_path, target):
         camera_file = gp.check_result(gp.gp_camera_file_get(self.camera, 
@@ -69,7 +74,7 @@ class gphoto(object):
 
     def capture_video(self, dst_file_path, video_duration):
         print('Capturing video')
-        file_path = self.capture_video(video_duration)
+        file_path = self.camera_capture_video(video_duration)
         print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
         target = os.path.join(dst_file_path, file_path.name)
         print('Copying image to', target)
@@ -77,7 +82,8 @@ class gphoto(object):
 
         return file_path.name
 
-
+    def is_camera_present(self):
+        return self.isCameraPresent
 
 if __name__=="__main__":
     gplib = gphoto()
