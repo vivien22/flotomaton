@@ -1,4 +1,4 @@
-import io, time, os, sys, pygame, interface, photo_editor
+import io, time, datetime, os, sys, pygame, interface, photo_editor, storage
 
 try:
     pi_camera_pres = True
@@ -25,6 +25,9 @@ vid_taken  = 0
 # Init pygame
 pygame.init()
 
+# Storage init
+st = storage.init('/home/pi/flotomaton/photos')
+
 # Create interface
 ihm = interface.init(pygame, "../images/fond.png")
 
@@ -46,15 +49,19 @@ def take_and_diplay_pic():
 
     # default image displayed if not taken
     image_name = '../images/photo_test.png'
+
+    date = datetime.datetime.now().strftime('%H:%M:%S')
     
     if pi_camera_pres and not gphoto_pres:
-        image_name = '../image_' + str(pics_taken) + '.jpg'
+        image_name = '../picam_image_' + date + '.jpg'
         camera.capture(image_name)
+        image_name = st.store(image_name)
 
     # Take picture with gphoto
     if gphoto_pres:
         image_name = gp.capture_single_image('/home/pi/flotomaton')
         image_name = '/home/pi/flotomaton/' + image_name
+        image_name = st.store(image_name)
 
     if pi_camera_pres:
         camera.stop_preview()
