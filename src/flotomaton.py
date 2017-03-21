@@ -1,4 +1,5 @@
-import io, time, datetime, os, sys, pygame, interface, photo_editor, storage
+import io, time, os, sys, pygame
+import photo_editor, storage, utils, interface
 
 try:
     pi_camera_pres = True
@@ -26,7 +27,8 @@ vid_taken  = 0
 pygame.init()
 
 # Storage init
-st = storage.init('/home/pi/flotomaton/photos')
+photo_storage = storage.init('/home/pi/flotomaton/data/photos')
+video_storage = storage.init('/home/pi/flotomaton/data/videos')
 
 # Create interface
 ihm = interface.init(pygame, "../images/fond.png")
@@ -49,19 +51,18 @@ def take_and_diplay_pic():
 
     # default image displayed if not taken
     image_name = '../images/photo_test.png'
-
-    date = datetime.datetime.now().strftime('%H:%M:%S')
     
     if pi_camera_pres and not gphoto_pres:
-        image_name = '../picam_image_' + date + '.jpg'
+        # image_name = '../picam_image_' + date + '.jpg'
+        image_name = '../picam_image_' + utils.get_time() + '.jpg'
         camera.capture(image_name)
-        image_name = st.store(image_name)
+        image_name = photo_storage.store(image_name)
 
     # Take picture with gphoto
     if gphoto_pres:
-        image_name = gp.capture_single_image('/home/pi/flotomaton')
-        image_name = '/home/pi/flotomaton/' + image_name
-        image_name = st.store(image_name)
+        image_name = gp.capture_single_image('.')
+        image_name = utils.add_date_suffix(image_name)
+        image_name = photo_storage.store(image_name)
 
     if pi_camera_pres:
         camera.stop_preview()
@@ -96,14 +97,17 @@ def take_photo_montage():
     ihm.countdown_start()
 
     image_name_tab = take_pic(4)
-    
+
+    image_name = '../montage_' + utils.get_time() + '.jpg'
+
     photo_editor.montage(image_name_tab[0],
                          image_name_tab[1],
                          image_name_tab[2],
                          image_name_tab[3],
-                         "../montage.jpg")
+                         image_name)
 
-    ihm.display_image("../montage.jpg", 2000)
+    image_name = photo_storage.store(image_name)
+    ihm.display_image(image_name, 2000)
     ihm.reset_background()
  
 def take_video():
@@ -114,14 +118,17 @@ def take_video():
     vid_taken += 1
     
     if pi_camera_pres and not gphoto_pres:
-        camera.start_recording('../video_' + str(vid_taken) + '.h264')
+        video_name = 'video_' + utils.get_time() + '.h264'
+        camera.start_recording(video_name)
+        video_name = video_storage.store(video_name)
         # Recording duration / duree enregistrement (15s)
         camera.wait_recording(5)
         camera.stop_recording()
 
     if gphoto_pres:
         # 5 seconds video capture
-        video_name = gp.capture_video('/home/pi/flotomaton', 5)
+        video_name = gp.capture_video('.', 5)
+        video_name = video_storage.store(video_name)
  
     ihm.reset_background()
 

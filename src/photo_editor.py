@@ -1,7 +1,10 @@
 import os
 
 def resize(image_in, size):   
-    image_out = image_in + "_resized"
+    # extract file name without extension
+    image_out = '.'.join(image_in.split('.')[:-1])
+    # then add resized string
+    image_out = image_out + "_resized.jpg"
     os.system("convert " + image_in + " -resize " + str(size) + "@ " + image_out)
     return image_out
 

@@ -1,4 +1,4 @@
-import datetime, os, shutil
+import utils, os, shutil
 
 class init(object):
   
@@ -8,8 +8,7 @@ class init(object):
             os.makedirs(directory)
 
     def store(self, file_path):
-        date = datetime.datetime.now().strftime('%Y-%m-%d')
-        target_fir = os.path.join(self.directory, date)
+        target_fir = os.path.join(self.directory, utils.get_time())
         if not os.path.exists(target_fir):
             os.makedirs(target_fir)
 

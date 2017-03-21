@@ -54,7 +54,7 @@ class init(object):
 
     def display_image(self, image_path, display_time_ms):
 
-        print("Display image " + str(image_path))
+        # print("Display image " + str(image_path))
 
         # erases the entire screen surface
         self.screen.fill(self.pygame.Color("black"))
