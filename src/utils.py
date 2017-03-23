@@ -14,6 +14,9 @@ def rename(file_path_in, file_path_out):
 def get_time():
     return datetime.datetime.now().strftime('%H:%M:%S')
 
+def get_date():
+    return datetime.datetime.now().strftime('%Y-%m-%d')
+
 def add_date_suffix(file_name):
     return add_suffix(file_name, get_time())
 

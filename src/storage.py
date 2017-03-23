@@ -8,7 +8,7 @@ class init(object):
             os.makedirs(directory)
 
     def store(self, file_path):
-        target_fir = os.path.join(self.directory, utils.get_time())
+        target_fir = os.path.join(self.directory, utils.get_date())
         if not os.path.exists(target_fir):
             os.makedirs(target_fir)
 
