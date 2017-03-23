@@ -1,6 +1,10 @@
 import io, time, os, sys, pygame, warnings
 import photo_editor, storage, utils, interface
 
+sys.path.insert(0, os.getcwd() + '/../games/pacman')
+sys.path.insert(0, os.getcwd() + '/../games/pacman/layouts')
+import pacman
+
 class flotomaton(object):
   
     def __init__(self, photo_storage_path, video_storage_path):
@@ -17,7 +21,7 @@ class flotomaton(object):
         except:
             print("WARN : no gphoto library detected !")
             self.gphoto_pres = False
-
+   
         # Display warning for deprecated Picamera functions (since v1.8)
         warnings.filterwarnings('default', category=DeprecationWarning)
 
@@ -125,6 +129,21 @@ class flotomaton(object):
      
         self.ihm.reset_background()
 
+
+    def start_pacman(self):
+        if self.pi_camera_pres:
+            self.pi_camera.close()
+        if self.gphoto_pres:
+            self.gp.close()
+
+        pygame.quit()
+
+        os.chdir(os.getcwd() + '/../games/pacman')
+        args = pacman.readCommand( sys.argv[1:] ) # Get game components based on input
+        pacman.runGames( **args )
+        os.chdir(os.getcwd())
+        import flotomaton
+
     def quit_app(self):
         if self.pi_camera_pres:
             self.pi_camera.close()
@@ -147,8 +166,9 @@ class flotomaton(object):
                         self.take_photo_montage()
                     elif event.key == pygame.K_v:
                         self.take_video()
+                    elif event.key == pygame.K_g:
+                        self.start_pacman()
 
 if __name__=="__main__":
     flotomaton = flotomaton('/home/pi/flotomaton/data/photos', '/home/pi/flotomaton/data/videos')
     flotomaton.main_loop()
-    

@@ -1,0 +1,4 @@
+[submodule "games/pacman"]
+	path = games/pacman
+	url = https://github.com/pushkar/ud820-proj.git
+    branch = pacman
