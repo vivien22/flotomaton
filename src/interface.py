@@ -2,7 +2,7 @@ import pygame
 
 class init(object):
   
-    def __init__(self, pygame, background_image_path):
+    def __init__(self, pygame, background_image_path, snapshot_sound_path):
         self.pygame = pygame
   
         # Start fullscreen, mask mouse
@@ -21,6 +21,9 @@ class init(object):
 
         # Load, resize & display background
         self.background = self.display_image(background_image_path, 0)
+
+        # Load sounds
+        self.snapshot_sound = pygame.mixer.Sound(snapshot_sound_path)
 
     def countdown_start(self):
         
@@ -67,6 +70,9 @@ class init(object):
         self.pygame.time.wait(display_time_ms)
 
         return image
+
+    def play_snapshot_sound(self):
+        self.snapshot_sound.play()
 
 def main():
     pygame.init()

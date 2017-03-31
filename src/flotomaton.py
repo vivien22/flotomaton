@@ -29,7 +29,7 @@ class flotomaton(object):
         self.video_storage = storage.init(video_storage_path)
 
         # Create interface
-        self.ihm = interface.init(pygame, "../images/fond.png")
+        self.ihm = interface.init(pygame, "../images/fond.png", "../sounds/snapshot.wav")
 
         # Intialize gphoto library
         if self.gphoto_pres:
@@ -48,6 +48,10 @@ class flotomaton(object):
      
     # Define functions / fonctions
     def take_and_diplay_pic(self):
+
+        # TODO : see if it's blocking !!!!
+        # Play snapshot sound
+        self.imh.play_snapshot_sound()
 
         # default image displayed if not taken
         image_name = '../images/photo_test.png'
@@ -151,4 +155,3 @@ class flotomaton(object):
 if __name__=="__main__":
     flotomaton = flotomaton('/home/pi/flotomaton/data/photos', '/home/pi/flotomaton/data/videos')
     flotomaton.main_loop()
-    
