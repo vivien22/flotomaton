@@ -116,17 +116,15 @@ class flotomaton(object):
 
         self.ihm.countdown_start()
         
-        if self.pi_camera_pres and not self.gphoto_pres:
+        if self.pi_camera_pres:
             video_name = 'video_' + utils.get_time() + '.h264'
             # Recording duration (5 sec)
             self.pi_camera.capture_video(video_name, 5)
             video_name = self.video_storage.store(video_name)
-
-        if self.gphoto_pres:
-            # 5 seconds video capture
-            video_name = self.gp.capture_video('.', 5)
-            video_name = self.video_storage.store(video_name)
      
+            # TODO 
+            self.ihm.play_video(video_name)
+
         self.ihm.reset_background()
 
     def quit_app(self):

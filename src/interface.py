@@ -1,4 +1,4 @@
-import pygame
+import pygame, subprocess
 
 class init(object):
   
@@ -73,6 +73,9 @@ class init(object):
 
     def play_snapshot_sound(self):
         self.snapshot_sound.play()
+
+    def play_video(self, video_path):
+        subprocess.Popen('omxplayer', '-o', 'hdmi', video_path)
 
 def main():
     pygame.init()
