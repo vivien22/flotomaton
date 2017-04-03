@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 button_1 = 3
 button_2 = 5
 button_3 = 7
+button_4 = 9
 
 # handle the button event
 def buttonEventHandler (pin):

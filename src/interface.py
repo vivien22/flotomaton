@@ -75,6 +75,7 @@ class init(object):
         self.snapshot_sound.play()
 
     def play_video(self, video_path):
+        print('omxplayer -p -o hdmi ' + video_path)
         os.system('omxplayer -p -o hdmi ' + video_path)
 
 def main():

@@ -1,5 +1,5 @@
 import io, time, os, sys, pygame, warnings, subprocess
-import photo_editor, storage, utils, interface, gpio
+import photo_editor, storage, utils, interface, gpio, dubsmash
 
 class flotomaton(object):
   
@@ -47,6 +47,9 @@ class flotomaton(object):
         # Start camera preview / Demarre affichage en direct
         if self.pi_camera_pres:
             self.pi_camera.start()
+
+        # Initialize dubsmash
+        self.dubsmash = dubsmash.init(pygame, self.ihm, self.pi_camera)
 
     # Define functions / fonctions
     def take_and_diplay_pic(self):
@@ -120,7 +123,7 @@ class flotomaton(object):
         if self.pi_camera_pres:
             video_name = 'video_' + utils.get_time() + '.h264'
             # Recording duration (5 sec)
-            self.pi_camera.capture_video(video_name, 5)
+            self.pi_camera.capture_video(video_name, 5000)
             video_name = self.video_storage.store(video_name)
      
             # TODO 
@@ -138,16 +141,19 @@ class flotomaton(object):
         sys.exit(0)
     
     def gpio_callback_func(self, pin):
-        if   pin == gpio.button_1:
+        if (pin == gpio.button_1) or (pin == gpio.button_2) or (pin == gpio.button_3) or (pin == gpio.button_4):
             ev = pygame.event.Event(pygame.USEREVENT, {'pin': pin})
             pygame.event.post(ev)
-            print("button 1 event")
+            print("button event " + str(pin))
         else:
             print("unhandled gpio event")
 
     def main_loop(self):
         while(True):
+            # Sleep 1/24 ms (framerate) to avoid 100% CPU load
+            time.sleep(1/24)
             self.ihm.refresh()
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -158,14 +164,22 @@ class flotomaton(object):
                         self.take_photo_montage()
                     elif event.key == pygame.K_v:
                         self.take_video()
-
-                    elif event.key == pygame.K_t:
-                        ev = pygame.event.Event(pygame.USEREVENT, {'pin': 2})
-                        pygame.event.post(ev)
+                    elif event.key == pygame.K_d:
+                        print('Dubsmash !')
+                        self.dubsmash.start()
 
                 elif event.type == pygame.USEREVENT:
                     print('GPIO ' + str(event.pin) + ' pressed')
-                    self.take_single_picture()
+                    if   event.pin == gpio.button_1:
+                        self.take_single_picture()
+                    elif event.pin == gpio.button_2:
+                        self.take_photo_montage()
+                    elif event.pin == gpio.button_3:
+                        self.take_video()
+                    elif event.pin == gpio.button_4:
+                        print('Dubsmash !')
+                        self.dubsmash.start()
+
 
 if __name__=="__main__":
     flotomaton = flotomaton('/home/pi/flotomaton/data/photos', '/home/pi/flotomaton/data/videos')

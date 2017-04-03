@@ -1,3 +1,4 @@
+import os
 
 try:
     import picamera
@@ -15,8 +16,9 @@ class camera(object):
         self.camera.capture(image_name)
 
     def capture_video(self, video_name, duration):
+        # os.system('raspivid -o ' + str(video_name) +  ' -t ' + str(duration))
         self.camera.start_recording(video_name)
-        self.camera.wait_recording(duration)
+        self.camera.wait_recording(duration/1000)
         self.camera.stop_recording()
 
     def start(self):
