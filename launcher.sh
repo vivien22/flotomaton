@@ -1,3 +1,3 @@
 #!/bin/bash
 cd src
-python flotomaton.py 
+sudo python flotomaton.py 

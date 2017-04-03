@@ -1,5 +1,5 @@
-import io, time, os, sys, pygame, warnings
-import photo_editor, storage, utils, interface
+import io, time, os, sys, pygame, warnings, subprocess
+import photo_editor, storage, utils, interface, gpio
 
 class flotomaton(object):
   
@@ -24,6 +24,9 @@ class flotomaton(object):
         # Init pygame
         pygame.init()
 
+        # GPIO
+        self.gpio = gpio.init(self.gpio_callback_func)
+
         # Storage init
         self.photo_storage = storage.init(photo_storage_path)
         self.video_storage = storage.init(video_storage_path)
@@ -45,13 +48,11 @@ class flotomaton(object):
         if self.pi_camera_pres:
             self.pi_camera.start()
 
-     
     # Define functions / fonctions
     def take_and_diplay_pic(self):
 
-        # TODO : see if it's blocking !!!!
         # Play snapshot sound
-        self.imh.play_snapshot_sound()
+        self.ihm.play_snapshot_sound()
 
         # default image displayed if not taken
         image_name = '../images/photo_test.png'
@@ -65,7 +66,7 @@ class flotomaton(object):
         # Take picture with gphoto
         if self.gphoto_pres:
             image_name = self.gp.capture_single_image('.')
-            image_name = utils.add_date_suffix(image_name)
+            image_name = utils.rename_with_time_suffix(image_name)
             image_name = self.photo_storage.store(image_name)
 
         if self.pi_camera_pres:
@@ -109,7 +110,7 @@ class flotomaton(object):
                              image_name)
 
         image_name = self.photo_storage.store(image_name)
-        self.ihm.display_image(image_name, 2000)
+        self.ihm.display_image(image_name, 5000)
         self.ihm.reset_background()
      
     def take_video(self):
@@ -135,6 +136,14 @@ class flotomaton(object):
 
         pygame.quit()
         sys.exit(0)
+    
+    def gpio_callback_func(self, pin):
+        if   pin == gpio.button_1:
+            ev = pygame.event.Event(pygame.USEREVENT, {'pin': pin})
+            pygame.event.post(ev)
+            print("button 1 event")
+        else:
+            print("unhandled gpio event")
 
     def main_loop(self):
         while(True):
@@ -149,6 +158,14 @@ class flotomaton(object):
                         self.take_photo_montage()
                     elif event.key == pygame.K_v:
                         self.take_video()
+
+                    elif event.key == pygame.K_t:
+                        ev = pygame.event.Event(pygame.USEREVENT, {'pin': 2})
+                        pygame.event.post(ev)
+
+                elif event.type == pygame.USEREVENT:
+                    print('GPIO ' + str(event.pin) + ' pressed')
+                    self.take_single_picture()
 
 if __name__=="__main__":
     flotomaton = flotomaton('/home/pi/flotomaton/data/photos', '/home/pi/flotomaton/data/videos')

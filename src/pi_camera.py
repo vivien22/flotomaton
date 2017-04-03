@@ -9,6 +9,7 @@ class camera(object):
     def __init__(self):
         self.camera = picamera.PiCamera()
         self.camera.framerate = float(24)
+        self.camera.hflip = True
 
     def capture_photo(self, image_name):
         self.camera.capture(image_name)

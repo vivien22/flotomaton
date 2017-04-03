@@ -11,42 +11,42 @@ button_3 = 7
 # handle the button event
 def buttonEventHandler (pin):
     if   pin == button_1:
-        print("handling button 1 event")
-    elif pin == button_2:
-        print("handling button 2 event")
-    elif pin == button_3:
-        print("handling button 3 event")
+        print("TEST : handling button 1 event")
+    # elif pin == button_2:
+    #     print("TEST : handling button 2 event")
+    # elif pin == button_3:
+    #     print("TEST : handling button 3 event")
     else:
-        print("unhandled gpio event")
+        print("TEST : unhandled gpio event")
 
 class init(object):
   
-    def __init__(self):
+    def __init__(self, buttonEventHandler):
         # tell the GPIO module that we want to use 
         # the chip's pin numbering scheme
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD)
 
         # setup buttons as an inputs
         GPIO.setup(button_1,GPIO.IN)
-        GPIO.setup(button_2,GPIO.IN)
-        GPIO.setup(button_3,GPIO.IN)
+        # GPIO.setup(button_2,GPIO.IN)
+        # GPIO.setup(button_3,GPIO.IN)
 
         # tell the GPIO library to look out for an 
         # event on button's pins and deal with it by calling 
         # the buttonEventHandler function
-        GPIO.add_event_detect  (button_1,GPIO.FALLING)
+        GPIO.add_event_detect  (button_1,GPIO.RISING, bouncetime=500)
         GPIO.add_event_callback(button_1,buttonEventHandler)
-        GPIO.add_event_detect  (button_2,GPIO.FALLING)
-        GPIO.add_event_callback(button_2,buttonEventHandler)
-        GPIO.add_event_detect  (button_3,GPIO.FALLING)
-        GPIO.add_event_callback(button_3,buttonEventHandler)
+        # GPIO.add_event_detect  (button_2,GPIO.FALLING)
+        # GPIO.add_event_callback(button_2,buttonEventHandler)
+        # GPIO.add_event_detect  (button_3,GPIO.FALLING)
+        # GPIO.add_event_callback(button_3,buttonEventHandler)
 
 
     def close(self):
         GPIO.cleanup()
 
 if __name__=="__main__":
-    gp = init()
+    gp = init(buttonEventHandler)
     while True:
 	test = 1
     gp.close()

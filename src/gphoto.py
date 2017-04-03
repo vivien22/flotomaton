@@ -17,8 +17,9 @@ class gphoto(object):
 
         try:
             gp.check_result(gp.gp_camera_init(self.camera, self.context))
+            self.isCameraPresent = True
         except:
-            print("WARN : fail to init camera !")
+            print("WARN : fail to init gphoto camera !")
             self.isCameraPresent = False
 
     def close(self):
