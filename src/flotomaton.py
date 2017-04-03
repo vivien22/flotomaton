@@ -1,5 +1,5 @@
 import io, time, os, sys, pygame, warnings, subprocess
-import photo_editor, storage, utils, interface, gpio, dubsmash
+import photo_editor, storage, utils, interface, gpio, dubsmash, capture
 
 class flotomaton(object):
   
@@ -48,8 +48,10 @@ class flotomaton(object):
         if self.pi_camera_pres:
             self.pi_camera.start()
 
+        self.capture = capture.init(self.photo_storage, self.video_storage, self.pi_camera)
+
         # Initialize dubsmash
-        self.dubsmash = dubsmash.init(pygame, self.ihm, self.pi_camera)
+        self.dubsmash = dubsmash.init(pygame, self.ihm, self.pi_camera, self.capture)
 
     # Define functions / fonctions
     def take_and_diplay_pic(self):
@@ -75,6 +77,9 @@ class flotomaton(object):
         if self.pi_camera_pres:
             self.pi_camera.stop()
 
+        # TODO : test to avoid ghost image
+        self.ihm.clear_barckground()
+
         self.ihm.display_image(image_name, 2000)
 
         if self.pi_camera_pres:
@@ -96,7 +101,7 @@ class flotomaton(object):
     def take_single_picture(self):
         self.ihm.countdown_start()
         self.take_pic(1)
-        self.ihm.reset_background()
+        self.ihm.reset_background_image()
 
     def take_photo_montage(self):
 
@@ -113,23 +118,23 @@ class flotomaton(object):
                              image_name)
 
         image_name = self.photo_storage.store(image_name)
+
+        # TODO : test to avoid ghost image
+        self.ihm.clear_barckground()
+
         self.ihm.display_image(image_name, 5000)
-        self.ihm.reset_background()
+        self.ihm.reset_background_image()
      
     def take_video(self):
 
         self.ihm.countdown_start()
         
         if self.pi_camera_pres:
-            video_name = 'video_' + utils.get_time() + '.h264'
-            # Recording duration (5 sec)
-            self.pi_camera.capture_video(video_name, 5000)
-            video_name = self.video_storage.store(video_name)
-     
-            # TODO 
+            video_name = self.capture.capture_video(5000)
+            # Replay video 
             self.ihm.play_video(video_name)
 
-        self.ihm.reset_background()
+        self.ihm.reset_background_image()
 
     def quit_app(self):
         if self.pi_camera_pres:

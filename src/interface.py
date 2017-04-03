@@ -1,4 +1,4 @@
-import pygame, subprocess, os
+import pygame, os
 
 class init(object):
   
@@ -45,11 +45,16 @@ class init(object):
         self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
         self.pygame.display.flip()
 
-    def reset_background(self):
+    def reset_background_image(self):
         # erases the entire screen surface
         self.screen.fill(self.pygame.Color("black"))
         # then diplay background
         self.screen.blit(self.background, (0,0))
+        self.pygame.display.flip()
+
+    def clear_barckground(self):
+        # erases the entire screen surface
+        self.screen.fill(self.pygame.Color("black"))
         self.pygame.display.flip()
 
     def refresh(self):
