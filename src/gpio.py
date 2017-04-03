@@ -7,16 +7,18 @@ import RPi.GPIO as GPIO
 button_1 = 3
 button_2 = 5
 button_3 = 7
-button_4 = 9
+button_4 = 8
 
 # handle the button event
 def buttonEventHandler (pin):
     if   pin == button_1:
         print("TEST : handling button 1 event")
-    # elif pin == button_2:
-    #     print("TEST : handling button 2 event")
-    # elif pin == button_3:
-    #     print("TEST : handling button 3 event")
+    elif pin == button_2:
+        print("TEST : handling button 2 event")
+    elif pin == button_3:
+        print("TEST : handling button 3 event")
+    elif pin == button_4:
+        print("TEST : handling button 4 event")
     else:
         print("TEST : unhandled gpio event")
 
@@ -29,19 +31,21 @@ class init(object):
 
         # setup buttons as an inputs
         GPIO.setup(button_1,GPIO.IN)
-        # GPIO.setup(button_2,GPIO.IN)
-        # GPIO.setup(button_3,GPIO.IN)
+        GPIO.setup(button_2,GPIO.IN)
+        GPIO.setup(button_3,GPIO.IN)
+        GPIO.setup(button_4,GPIO.IN)
 
         # tell the GPIO library to look out for an 
         # event on button's pins and deal with it by calling 
         # the buttonEventHandler function
         GPIO.add_event_detect  (button_1,GPIO.RISING, bouncetime=500)
         GPIO.add_event_callback(button_1,buttonEventHandler)
-        # GPIO.add_event_detect  (button_2,GPIO.FALLING)
-        # GPIO.add_event_callback(button_2,buttonEventHandler)
-        # GPIO.add_event_detect  (button_3,GPIO.FALLING)
-        # GPIO.add_event_callback(button_3,buttonEventHandler)
-
+        GPIO.add_event_detect  (button_2,GPIO.RISING, bouncetime=500)
+        GPIO.add_event_callback(button_2,buttonEventHandler)
+        GPIO.add_event_detect  (button_3,GPIO.RISING, bouncetime=500)
+        GPIO.add_event_callback(button_3,buttonEventHandler)
+        GPIO.add_event_detect  (button_4,GPIO.RISING, bouncetime=500)
+        GPIO.add_event_callback(button_4,buttonEventHandler)
 
     def close(self):
         GPIO.cleanup()
