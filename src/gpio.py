@@ -5,10 +5,10 @@ import time
 import RPi.GPIO as GPIO
 
 # Pinout 
-button_1 = 3
-button_2 = 5
+button_1 = 5
+button_2 = 3
 button_3 = 7
-button_4 = 8
+button_4 = 10
 
 # handle the button event
 def buttonEventHandler (pin):
@@ -39,13 +39,13 @@ class init(object):
         # tell the GPIO library to look out for an 
         # event on button's pins and deal with it by calling 
         # the buttonEventHandler function
-        GPIO.add_event_detect  (button_1,GPIO.FALLING, bouncetime=500)
+        GPIO.add_event_detect  (button_1,GPIO.FALLING, bouncetime=1000)
         GPIO.add_event_callback(button_1,buttonEventHandler)
-        GPIO.add_event_detect  (button_2,GPIO.FALLING, bouncetime=500)
+        GPIO.add_event_detect  (button_2,GPIO.FALLING, bouncetime=1000)
         GPIO.add_event_callback(button_2,buttonEventHandler)
-        GPIO.add_event_detect  (button_3,GPIO.FALLING, bouncetime=500)
+        GPIO.add_event_detect  (button_3,GPIO.FALLING, bouncetime=1000)
         GPIO.add_event_callback(button_3,buttonEventHandler)
-        GPIO.add_event_detect  (button_4,GPIO.FALLING, bouncetime=500)
+        GPIO.add_event_detect  (button_4,GPIO.FALLING, bouncetime=1000)
         GPIO.add_event_callback(button_4,buttonEventHandler)
 
     def close(self):
