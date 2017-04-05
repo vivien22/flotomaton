@@ -77,10 +77,7 @@ class flotomaton(object):
         if self.pi_camera_pres:
             self.pi_camera.stop()
 
-        # TODO : test to avoid ghost image
-        self.ihm.clear_barckground()
-
-        self.ihm.display_image(image_name, 2000)
+        self.ihm.display_image_and_clear(image_name, 2000)
 
         if self.pi_camera_pres:
             self.pi_camera.start()
@@ -88,26 +85,26 @@ class flotomaton(object):
         return image_name
 
 
-    def take_pic(self, image_to_take):
+    def take_pic(self, image_to_take, waiting_time_between_pic):
         image_name_tab = []
 
         # Take picture with gphoto
         for i in range(0, image_to_take):
             # Call take_pic method to take, display picture and reset ihm
+            self.ihm.countdown_start()
             image_name_tab.append(self.take_and_diplay_pic())
+            if image_to_take > 1:
+                pygame.time.wait(waiting_time_between_pic)
 
         return image_name_tab
 
     def take_single_picture(self):
-        self.ihm.countdown_start()
-        self.take_pic(1)
+        self.take_pic(1, 0)
         self.ihm.reset_background_image()
 
     def take_photo_montage(self):
 
-        self.ihm.countdown_start()
-
-        image_name_tab = self.take_pic(4)
+        image_name_tab = self.take_pic(4, 1000)
 
         image_name = '../montage_' + utils.get_time() + '.jpg'
 
@@ -119,10 +116,14 @@ class flotomaton(object):
 
         image_name = self.photo_storage.store(image_name)
 
-        # TODO : test to avoid ghost image
-        self.ihm.clear_barckground()
+        if self.pi_camera_pres:
+            self.pi_camera.stop()
 
-        self.ihm.display_image(image_name, 5000)
+        self.ihm.display_image_and_clear(image_name, 5000)
+
+        if self.pi_camera_pres:
+            self.pi_camera.start()
+
         self.ihm.reset_background_image()
      
     def take_video(self):
@@ -131,9 +132,17 @@ class flotomaton(object):
         
         if self.pi_camera_pres:
             video_name = self.capture.capture_video(5000)
+            self.pi_camera.stop()
             # Replay video 
             self.ihm.play_video(video_name)
+            self.pi_camera.start()
 
+        self.ihm.reset_background_image()
+
+    def start_dubsmash(self):
+        self.ihm.play_snapshot_sound()
+        self.ihm.countdown_start()
+        self.dubsmash.start()
         self.ihm.reset_background_image()
 
     def quit_app(self):
@@ -170,8 +179,7 @@ class flotomaton(object):
                     elif event.key == pygame.K_v:
                         self.take_video()
                     elif event.key == pygame.K_d:
-                        print('Dubsmash !')
-                        self.dubsmash.start()
+                        self.start_dubsmash()
 
                 elif event.type == pygame.USEREVENT:
                     print('GPIO ' + str(event.pin) + ' pressed')
@@ -182,8 +190,7 @@ class flotomaton(object):
                     elif event.pin == gpio.button_3:
                         self.take_video()
                     elif event.pin == gpio.button_4:
-                        print('Dubsmash !')
-                        self.dubsmash.start()
+                        self.start_dubsmash()
 
 
 if __name__=="__main__":

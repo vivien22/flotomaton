@@ -62,10 +62,9 @@ class init(object):
 
     def display_image(self, image_path, display_time_ms):
 
-        # print("Display image " + str(image_path))
+        # Clear before display
+        self.clear_barckground()
 
-        # erases the entire screen surface
-        self.screen.fill(self.pygame.Color("black"))
         # Load, resize & display image
         image = pygame.image.load(image_path).convert()
         image = pygame.transform.scale(image, (self.width, self.height))
@@ -76,11 +75,22 @@ class init(object):
 
         return image
 
+    def display_image_and_clear(self, image_path, display_time_ms):
+        image = self.display_image(image_path, display_time_ms)
+        self.clear_barckground()
+        return image
+
     def play_snapshot_sound(self):
         self.snapshot_sound.play()
 
+    def play_sound(self, path):
+        sound = pygame.mixer.Sound(path)
+        sound.play()
+        return (sound.get_length()*1000)
+
     def play_video(self, video_path):
-        print('omxplayer -p -o hdmi ' + video_path)
+        # Clear before display
+        self.clear_barckground()
         os.system('omxplayer -p -o hdmi ' + video_path)
 
 def main():
