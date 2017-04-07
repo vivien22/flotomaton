@@ -1,11 +1,16 @@
-import os
+import os, utils
 
 def resize(image_in, size):   
+    image_out = utils.add_suffix(image_in, 'resized')
+    os.system("convert " + image_in + " -resize " + str(size) + "@ " + image_out)
+    return image_out
+
+def mogrify_resize(image_in, size):   
     # extract file name without extension
     image_out = '.'.join(image_in.split('.')[:-1])
     # then add resized string
     image_out = image_out + "_resized.jpg"
-    os.system("convert " + image_in + " -resize " + str(size) + "@ " + image_out)
+    os.system("mogrify -sample " + str(size) + " " + image_in + " " + image_out)
     return image_out
 
 def montage(image_1, image_2, image_3, image_4, photo_montage_name):
@@ -16,6 +21,11 @@ def montage(image_1, image_2, image_3, image_4, photo_montage_name):
               resize(image_4, 640*480) + 
               " -tile 2x2 -geometry +10+10 " + 
               photo_montage_name)
+
+    # add_label(photo_montage_name, '../images/label_bas.png')
+
+def add_label(montage, label):
+    os.system("montage " + montage + " " + label + " -tile 1x2 -geometry +5+5 " + utils.add_suffix(montage, 'labeled'))
 
 if __name__ == "__main__":
     montage('/home/pi/flotomaton/capt0000.jpg',
