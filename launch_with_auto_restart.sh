@@ -2,7 +2,7 @@
 while true
 do
     if (pgrep launcher) ; then 
-        sleep 2
+        sleep 1
     else
         ./launcher.sh &
     fi

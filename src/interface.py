@@ -2,8 +2,9 @@ import pygame, os
 
 class init(object):
   
-    def __init__(self, pygame, background_image_path, snapshot_sound_path):
-        self.pygame = pygame
+    def __init__(self, pygame, pi_camera, background_image_path, snapshot_sound_path):
+        self.pygame    = pygame
+        self.pi_camera = pi_camera
   
         # Start fullscreen, mask mouse
         res = pygame.display.list_modes()   # return the resolution of your monitor 
@@ -26,7 +27,8 @@ class init(object):
         self.snapshot_sound = pygame.mixer.Sound(snapshot_sound_path)
 
     def countdown_start(self):
-        
+        self.pi_camera.set_transparancy(128)
+
         self.screen.fill(self.pygame.Color("black")) # erases the entire screen surface
         self.screen.blit(self.text_3, ((self.width - self.text_3.get_width()) // 2, (self.height - self.text_3.get_height()) // 2))
         self.pygame.display.flip()
@@ -86,7 +88,7 @@ class init(object):
     def play_sound(self, path):
         sound = pygame.mixer.Sound(path)
         sound.play()
-        return (sound.get_length()*1000)
+        return int(sound.get_length()*1000)
 
     def play_video(self, video_path):
         # Clear before display

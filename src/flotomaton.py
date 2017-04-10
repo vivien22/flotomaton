@@ -31,9 +31,6 @@ class flotomaton(object):
         self.photo_storage = storage.init(photo_storage_path)
         self.video_storage = storage.init(video_storage_path)
 
-        # Create interface
-        self.ihm = interface.init(pygame, "../images/fond.png", "../sounds/snapshot.wav")
-
         # Intialize gphoto library
         if self.gphoto_lib_pres:
             self.gp = gphoto.gphoto();
@@ -45,6 +42,9 @@ class flotomaton(object):
         # Start camera preview / Demarre affichage en direct
         if self.pi_camera_pres:
             self.pi_camera.start()
+
+        # Create interface
+        self.ihm = interface.init(pygame, self.pi_camera, "../images/fond.png", "../sounds/snapshot.wav")
 
         self.capture = capture.init(self.photo_storage, self.video_storage, self.pi_camera)
 
@@ -124,7 +124,7 @@ class flotomaton(object):
 
         image_name = self.photo_storage.store(image_name)
 
-        self.ihm.display_image_and_clear(image_name, 5000)
+        self.ihm.display_image_and_clear(image_name, 10000)
 
         if self.pi_camera_pres:
             self.pi_camera.start()
@@ -145,7 +145,6 @@ class flotomaton(object):
         self.ihm.reset_background_image()
 
     def start_dubsmash(self):
-        self.ihm.play_snapshot_sound()
         self.ihm.countdown_start()
         self.dubsmash.start()
         self.ihm.reset_background_image()
@@ -172,13 +171,13 @@ class flotomaton(object):
     # def start_led_garland_process(self):
     #     print('Start led_garland_process')
     #     self.led_garland_process_started = True
-    #     # self.led_garland_process = multiprocessing.Process(name='led_garland', target=self.gpio.led_process)
-    #     # self.led_garland_process.start()
+    #     self.led_garland_process = multiprocessing.Process(name='led_garland', target=self.gpio.led_process)
+    #     self.led_garland_process.start()
 
     # def terminate_led_garland_process(self):
     #     if self.led_garland_process_started:
     #         print('Terminate led_garland_process')
-    #         # self.led_garland_process.terminate()
+    #         self.led_garland_process.terminate()
     #         self.led_garland_process_started = False
 
     def main_loop(self):

@@ -1,4 +1,4 @@
-import os, utils
+import os, utils, storage
 
 def resize(image_in, size):   
     image_out = utils.add_suffix(image_in, 'resized')
@@ -20,12 +20,13 @@ def montage(image_1, image_2, image_3, image_4, photo_montage_name):
               resize(image_3, 640*480) + " " + 
               resize(image_4, 640*480) + 
               " -tile 2x2 -geometry +10+10 " + 
+              # " -tile 2x2 -geometry +30+30 -texture ../images/label_bas.png " + 
               photo_montage_name)
 
-    # add_label(photo_montage_name, '../images/label_bas.png')
+    add_label(photo_montage_name, '../images/bas.png')
 
 def add_label(montage, label):
-    os.system("montage " + montage + " " + label + " -tile 1x2 -geometry +5+5 " + utils.add_suffix(montage, 'labeled'))
+    os.system("montage " + montage + " " + label + " -tile 1x2 -geometry +5+5 " + montage)
 
 if __name__ == "__main__":
     montage('/home/pi/flotomaton/capt0000.jpg',

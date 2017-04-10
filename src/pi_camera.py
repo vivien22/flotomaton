@@ -10,7 +10,8 @@ class camera(object):
     def __init__(self):
         self.camera           = picamera.PiCamera()
         self.camera.framerate = float(24)
-        self.camera.hflip     = True
+        self.camera.hflip     = False
+        self.camera.vflip     = True
 
     def capture_photo(self, image_name):
         self.camera.capture(image_name)
@@ -23,11 +24,14 @@ class camera(object):
 
     def start(self):
         self.camera.start_preview()
-        # Set transparency
-        self.camera.preview.alpha = 128
+        self.set_transparancy(0)
 
     def stop(self):
         self.camera.stop_preview()
+
+    def set_transparancy(self, alpha):
+        # Set transparency
+        self.camera.preview.alpha = alpha
 
     def close(self):
         self.camera.close()

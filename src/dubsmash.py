@@ -19,7 +19,11 @@ class init(object):
 
         print('Play ' + self.dubsmash_sound_list[random_dubsmash_sound] + ' dubsmash sound')
 
-        # Sound test
+        # Play
+        duration = self.ihm.play_sound(self.dubsmash_sound_list[random_dubsmash_sound])
+        self.pygame.time.wait(duration)
+
+        # Sound
         duration = self.ihm.play_sound(self.dubsmash_sound_list[random_dubsmash_sound])
 
         # Capture video
